@@ -1,5 +1,5 @@
 <template>
-    <div class="area">
+    <div class="area" >
         <div class="header" @keypress.enter="adicionarTarefa">
             <div class="date">
                 <span class="day">{{dia}}</span>
@@ -13,23 +13,30 @@
                 {{diaTexto}}
             </div>
         </div>
-        <div v-show="mostrarInput" class="form">
-            <input ref="campo" :id="id" type="text" v-model="descricao" @keypress.enter="adicionarTarefa" maxlength="25" autofocus placeholder="Pressione enter para salvar">
-        </div>
 
+        <div class="body">
 
-        <div class="body" >
-            <div v-for="tarefa in tarefas">
-                <TodoTarefa @atualizar-tarefa="atualizarTarefa" @excluir-tarefa="excluirTarefa" :descricao="tarefa.descricao" :feito="tarefa.feito" :id="tarefa.id" />
+            <div v-show="mostrarInput" class="form">
+                <input ref="input" type="text" v-model="descricao" @keypress.enter="adicionarTarefa" maxlength="25"  placeholder="Pressione enter para salvar">
             </div>
-            
 
+
+            <div class="tarefas">
+                <div v-for="tarefa in tarefas">
+                    <TodoTarefa @atualizar-tarefa="atualizarTarefa" @excluir-tarefa="excluirTarefa" :descricao="tarefa.descricao" :feito="tarefa.feito" :id="tarefa.id" />
+                </div>
+            </div>
+        </div>
+        
+        
+        <div class="footer">
+            <div class="mostrar-input-area">
+                <button @click="mostrarCampo">+</button>
+            </div>
         </div>
 
     </div>
-    <div class="mostrar-input-area">
-        <button @click="mostrarCampo">+</button>
-    </div>
+    
     
 </template>
 
@@ -96,12 +103,17 @@ export default {
 
         },
         ordenarTarefas(){
-            const t = this.tarefas.sort( (tarefa)=>{
+            this.tarefas.sort( (tarefa)=>{
                 return tarefa.feito == true
             } )
         },
         mostrarCampo(){
-            this.mostrarInput = !this.mostrarInput
+            this.mostrarInput = !this.mostrarInput;
+
+            setTimeout( () => {
+                this.$refs.input.focus();   
+            }, 100 );
+            
         }
     },
     components: {
@@ -112,21 +124,33 @@ export default {
         this.ordenarTarefas();
     },
     beforeUpdate(){
-        this.ordenarTarefas();
-
+        this.ordenarTarefas();   
     }
 }
 </script>
 
 <style scoped>
+
+@media(max-width: 500px){
+    .area{
+        width: 300px !important;
+    }
+}
+@media(max-width: 300px){
+    .area{
+        width: 260px !important;
+    }
+}
 .area{
     min-height: 500px;
     max-height: 500px;
-    width: 380px;
-    overflow-y:scroll;
+    width: 350px;
     padding: 30px;
     background-color: #FFFFFF;
     color: #5D6070;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 .area .header{
     display: flex;
@@ -149,10 +173,27 @@ export default {
     background-color: rgba(207, 157, 30, 0.788);
 }
 .area .body{
-    padding: 5px;
-    margin-top: 15px;
-    max-height: 235px;
+    max-height: 320px;
     overflow-x: auto;
+    display: flex;
+    flex-direction: column;
+    padding-right: 10px;
+}
+.body::-webkit-scrollbar-track{
+    background-color: transparent;
+    
+}
+.body::-webkit-scrollbar{
+    width: 5px;
+    background: transparent;  
+}
+.body::-webkit-scrollbar-thumb {
+    background: #dad7d7;
+    border-radius: 15px;
+}
+
+.tarefas{
+    margin-top: 20px;
 }
 
 .date{
@@ -187,24 +228,28 @@ export default {
 }
 
 .mostrar-input-area{
-    position: absolute;
-    z-index: 10;
-    bottom: 100px;
-    right: 40%;
+    display: flex;
+    justify-content: end;
+}
+.mostrar-input-area button{
     width: 50px;
     height: 50px;
     border-radius: 40px;
-    opacity: .7;
-}
-.mostrar-input-area button{
-    width: 100%;
-    height: 100%;
-    border-radius: 40px;
     border: 0;
-    background-color: #58b302;
+    background-color: rgba(61, 172, 9, 0.568);
+}
+.mostrar-input-area button:hover{
+    background-color: rgba(61, 172, 9, 0.945);
 }
 .form{
-    margin-top: 30px;
+    margin-top: 10px;
+}
+
+.footer{
+    height: 100px;
+    display: flex;
+    justify-content: end;
+    align-items: flex-end;
 }
 
 .form input{

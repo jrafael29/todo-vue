@@ -42,6 +42,7 @@ export default {
     padding: 10px;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     color: #5D6070;
 
     overflow-wrap: break-word;
@@ -61,7 +62,7 @@ export default {
 .descricao p{
     font-size: 18px;
     word-wrap: break-word;
-    word-break: break-all;
+    word-break:break-all;
     text-align: center;
     padding: 0 15px;
 }
